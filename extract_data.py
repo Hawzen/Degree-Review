@@ -29,5 +29,5 @@ def get_grades(html_path):
 if __name__ == "__main__":
     df = get_grades(sys.argv[1])
     json = df.to_json()
-    with open("data.json", "w") as file:
+    with open("grades.json", "w") as file:
         file.write(f'{json}')
