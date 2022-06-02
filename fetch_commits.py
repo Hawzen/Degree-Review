@@ -21,7 +21,10 @@ db.commit()
 
 for repo in g.get_user().get_repos():
     cursor = db.cursor()
-    records = [(repo.name, str(to_datetime(commit.raw_data["commit"]["committer"]["date"])), str(commit.raw_data)) for commit in repo.get_commits()]
+    records = [
+        (repo.name, str(to_datetime(commit.raw_data["commit"]["committer"]["date"])), str(commit.raw_data)) 
+            for commit in repo.get_commits() if commit.raw_data["commit"]["committer"]["name"] == env["github_username"]
+            ]
     cursor.executemany("""
             INSERT INTO commits(repo, date, rawData)
             values(?, ?, ?)
