@@ -4,13 +4,13 @@ import sys
 
 def get_grades(html_path):
     res = pd.read_html(html_path)
-    
+
     tables = []
     correct_index = pd.Index(['رمز المقرر', 'اسم المقرر', 'الساعات', 'النقاط', 'التقدير'], dtype='object')
     for table in res:
         if len(table.columns) == len(correct_index) and (table.columns == correct_index).all():
             tables.append(table)
-    
+
     preprocessed_tables = []
     empty_row = array(['رمز المقرر', 'اسم المقرر', 'الساعات', 'النقاط', 'التقدير'], dtype=object)
     for table in tables:
@@ -22,9 +22,9 @@ def get_grades(html_path):
 
     for i, _ in enumerate(preprocessed_tables):
         preprocessed_tables[i]["الترم"] = len(preprocessed_tables) - i
-        
-    return pd.concat(preprocessed_tables[::-1]).reset_index(drop=True)
 
+    num_levels = len(preprocessed_tables[::-1])
+    return pd.concat(preprocessed_tables[::-1], keys=list(range(1, num_levels+1)))
 
 if __name__ == "__main__":
     df = get_grades(sys.argv[1])
